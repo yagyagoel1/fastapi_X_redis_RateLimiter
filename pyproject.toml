@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "fastapiratelimiter"
+version = "0.1.0"
+description = ""
+authors = ["yagyagoel1 <yagyagoel87@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.12"
+uvicorn = "^0.34.0"
+redis = "^5.2.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
