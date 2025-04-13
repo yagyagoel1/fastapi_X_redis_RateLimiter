@@ -4,10 +4,9 @@ services:
   redis:
     image: redis:latest
     container_name: redis_server
-    # Removed the ports section to avoid exposing Redis externally
     volumes:
       - redis_data:/data
-    command: redis-server --appendonly yes --protected-mode no  # Changed to 'no' within container network
+    command: redis-server --appendonly yes --protected-mode no  
     networks:
       - ratelimiter_network
     healthcheck:
