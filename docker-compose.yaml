@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis_server
+    # Removed the ports section to avoid exposing Redis externally
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --protected-mode no  # Changed to 'no' within container network
+    networks:
+      - ratelimiter_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    restart: unless-stopped
+
+  ratelimiter_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: ratelimiter_app
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - MAX_REQUESTS=100
+      - TIME_WINDOW=60  
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - ratelimiter_network
+    restart: unless-stopped
+
+networks:
+  ratelimiter_network:
+    driver: bridge
+
+volumes:
+  redis_data:
